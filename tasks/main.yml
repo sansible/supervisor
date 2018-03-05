@@ -1,1 +1,11 @@
 ---
+
+- name: Install Supervisor
+  include: build.yml
+  tags:
+    - build
+
+- name: Configure Supervisor
+  include: configure.yml
+  tags:
+    - configure

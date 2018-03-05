@@ -3,4 +3,11 @@
 - name: Converge
   hosts: all
   roles:
-    - role: ROLE_NAME
+    - role: supervisor
+      sansible_supervisor_conf_settings:
+        - name: loglevel
+          section: supervisord
+          value: debug
+        - name: minfds
+          section: supervisord
+          value: 2048
