@@ -8,7 +8,11 @@ Develop: [![Build Status](https://travis-ci.org/sansible/supervisor.svg?branch=d
 * [Examples](#examples)
 
 This installs Supervisor and optionally creates a config file with configurable
-settings.
+settings. Installs using Pip so a large range of versions are available, sets up
+in a similar fashion to OS packages with a default config file, symlinks to
+/usr/bin, SysVinit scripts and log directories.
+
+Init scripts are taken from (https://github.com/Supervisor/initscripts)[].
 
 
 
@@ -20,7 +24,7 @@ To install run `ansible-galaxy install sansible.supervisor` or add this to your
 
 ```YAML
 - name: sansible.supervisor
-  version: v1.0
+  version: v1.1
 ```
 
 and run `ansible-galaxy install -p ./roles -r roles.yml`
@@ -65,4 +69,42 @@ To add some config settings (see [http://supervisord.org/configuration.html]()):
         - name: minfds
           section: supervisord
           value: 2048
+```
+
+To stop this role from starting Supervisor at all the
+sansible_supervisor_start_on_boot flag is available, useful if you want to start
+once a service has been added:
+
+```YAML
+- name: Install and configure supervisor with a service
+  hosts: "somehost"
+
+  roles:
+    - role: sansible.supervisor
+      sansible_supervisor_start_on_boot: no
+
+  post_tasks:
+    - name: Add my_app service definition
+      become: yes
+      file:
+        dest: "{{ sansible_supervisor_conf_dir }}/my_app.conf"
+        src: service.conf
+
+    - name: Ensure supervisor service is started
+      become: yes
+      service:
+        name: supervisor
+        state: started
+
+    - name: Ensure my_app is present
+      become: yes
+      supervisorctl:
+        name: my_app
+        state: present
+
+    - name: Ensure my_app is started
+      become: yes
+      supervisorctl:
+        name: my_app
+        state: started
 ```

@@ -1,13 +1,55 @@
 ---
 
-- name: Install Supervisor
+- name: Install Python Pip
   become: yes
   apt:
-    name: supervisor
+    name: python-pip
     state: present
 
-- name: Ensure supervisor is enabled
+- name: Install Supervisor via pip
+  become: yes
+  pip:
+    name: supervisor
+    state: present
+    version: "{{ sansible_supervisor_version | default(omit) }}"
+
+- name: Create /usr/bin symlinks to supervisorctl and supervisord usually created by packages
+  become: yes
+  file:
+    dest: "/usr/bin/{{ item }}"
+    src: "/usr/local/bin/{{ item }}"
+    state: link
+  with_items:
+    - supervisorctl
+    - supervisord
+
+- name: Create required conf and log directories
+  become: yes
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /etc/supervisor
+    - /etc/supervisor/conf.d/
+    - /var/log/supervisor
+
+- name: Add default Supervisor config
+  become: yes
+  copy:
+    dest: /etc/supervisor/supervisord.conf
+    mode: u+rw,g+r,o+r
+    src: supervisord.conf
+
+- name: Add SysVinit script
+  become: yes
+  copy:
+    dest: /etc/init.d/supervisor
+    mode: u+rwx,g+rw,o+x
+    src: service.sysvinit
+
+- name: Ensure Supervisor is enabled
   become: yes
   service:
     name: supervisor
     enabled: yes
+  when: sansible_supervisor_start_on_boot
