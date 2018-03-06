@@ -10,11 +10,22 @@
     value: "{{ item.value }}"
   when: sansible_supervisor_conf_settings | length > 0
   with_items: "{{ sansible_supervisor_conf_settings }}"
-  notify:
-    - restart supervisor
+  register: sansible_supervisor_config
 
 - name: Ensure supervisor service is started
   become: yes
   service:
     name: supervisor
     state: started
+  when:
+    - sansible_supervisor_start_on_boot
+    - not sansible_supervisor_config.changed
+
+- name: Ensure supervisor service is restarted
+  become: yes
+  service:
+    name: supervisor
+    state: restarted
+  when:
+    - sansible_supervisor_start_on_boot
+    - sansible_supervisor_config.changed
