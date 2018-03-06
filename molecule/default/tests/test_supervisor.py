@@ -11,3 +11,8 @@ def test_config(host):
     assert super_config.exists
     assert super_config.contains('^\s*loglevel\s*=\s*debug\s*$')
     assert super_config.contains('^\s*minfds\s*=\s*2048\s*$')
+
+
+def test_version(host):
+    super_version = host.check_output('/usr/bin/supervisord -v')
+    assert super_version == '3.3.4'

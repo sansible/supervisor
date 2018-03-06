@@ -6,3 +6,5 @@ sansible_supervisor_conf_settings: []
 #   section: supervisord
 #   value: debug
 sansible_supervisor_conf_settings_file: "{{ sansible_supervisor_conf_dir }}/supervisord.conf"
+sansible_supervisor_start_on_boot: yes
+sansible_supervisor_version: ~

@@ -11,3 +11,4 @@
         - name: minfds
           section: supervisord
           value: 2048
+      sansible_supervisor_version: 3.3.4
