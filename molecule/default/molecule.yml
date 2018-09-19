@@ -53,6 +53,7 @@ scenario:
   name: default
   # The test_sequence can be removed once molecule reaches version 2.6.  See
   # https://github.com/metacloud/molecule/issues/1057 for reason.
+  # Idempotentcy disabled as Ansible 2.6 seems to have issues enabling services
   test_sequence:
     - lint
     - dependency
@@ -60,7 +61,6 @@ scenario:
     - create
     - prepare
     - converge
-    - idempotence
     - side_effect
     - verify
 
