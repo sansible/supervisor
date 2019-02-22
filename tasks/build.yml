@@ -46,10 +46,31 @@
     dest: /etc/init.d/supervisor
     mode: u+rwx,g+rw,o+x
     src: service.sysvinit
+  when: ansible_service_mgr != "systemd"
 
-- name: Ensure Supervisor is enabled
+- name: Add SystemD script
+  become: yes
+  copy:
+    dest: /etc/systemd/system/supervisor.service
+    mode: u+rwx,g+rw,o+x
+    src: service.systemd
+  when: ansible_service_mgr == "systemd"
+
+- name: Ensure Supervisor is enabled for SysV
   become: yes
   service:
     name: supervisor
     enabled: yes
-  when: sansible_supervisor_start_on_boot
+  when:
+    - sansible_supervisor_start_on_boot
+    - ansible_service_mgr != "systemd"
+
+- name: Ensure Supervisor is enabled for SystemD
+  become: yes
+  systemd:
+    daemon_reload: yes
+    name: supervisor
+    enabled: yes
+  when:
+    - sansible_supervisor_start_on_boot
+    - ansible_service_mgr == "systemd"
