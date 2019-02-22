@@ -24,7 +24,7 @@ To install run `ansible-galaxy install sansible.supervisor` or add this to your
 
 ```YAML
 - name: sansible.supervisor
-  version: v1.1
+  version: v1.2.x
 ```
 
 and run `ansible-galaxy install -p ./roles -r roles.yml`
@@ -36,8 +36,8 @@ and run `ansible-galaxy install -p ./roles -r roles.yml`
 
 This role uses tags: **build** and **configure**
 
-* `build` - Installs ...
-* `configure` - Configures ...
+* `build` - Installs supervisor
+* `configure` - Configures supervisor
 
 
 

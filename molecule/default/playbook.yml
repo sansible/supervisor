@@ -2,6 +2,7 @@
 
 - name: Converge
   hosts: all
+
   roles:
     - role: supervisor
       sansible_supervisor_conf_settings:
