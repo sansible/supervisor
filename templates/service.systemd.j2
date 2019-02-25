@@ -1,3 +1,7 @@
+#jinja2: lstrip_blocks: True
+##
+# {{ ansible_managed }}
+#
 [Unit]
 Description=Supervisor process control system for UNIX
 Documentation=http://supervisord.org
@@ -10,6 +14,10 @@ ExecReload=/usr/bin/supervisorctl -c /etc/supervisor/supervisord.conf $OPTIONS r
 KillMode=process
 Restart=on-failure
 RestartSec=50s
+
+{% if sansible_supervisor_start_pause %}
+ExecStartPost=/bin/sleep {{ sansible_supervisor_start_pause }}
+{% endif %}
 
 [Install]
 WantedBy=multi-user.target
