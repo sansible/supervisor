@@ -50,10 +50,10 @@
 
 - name: Add SystemD script
   become: yes
-  copy:
+  template:
     dest: /etc/systemd/system/supervisor.service
-    mode: u+rwx,g+rw,o+x
-    src: service.systemd
+    mode: u+rw,g+rw,o+r
+    src: service.systemd.j2
   when: ansible_service_mgr == "systemd"
 
 - name: Ensure Supervisor is enabled for SysV
