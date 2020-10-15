@@ -5,6 +5,14 @@
   apt:
     name: python-pip
     state: present
+  when: ansible_python.version.major == 2
+
+- name: Install Python3 Pip
+  become: yes
+  apt:
+    name: python3-pip
+    state: present
+  when: ansible_python.version.major == 3
 
 - name: Install Supervisor via pip
   become: yes

@@ -4,39 +4,27 @@ driver:
   name: docker
 
 platforms:
-  - name: supervisor-trusty
-    image: ubuntu:trusty
-  - name: supervisor-xenial
+  - name: sansible_supervisor-xenial
     image: ubuntu:xenial
-  - name: supervisor-bionic
+  - name: sansible_supervisor-bionic
     image: ubuntu:bionic
 
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
-    options:
-      x:
-        - ANSIBLE0016
 
-lint:
-  name: yamllint
-  options:
-    config-data:
-      extends: default
-      ignore: .venv_ansible*
-      rules:
-        line-length:
-          max: 159
-        truthy: disable
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8 molecule/
 
 dependency:
   name: galaxy
+  options:
+    role-file: requirements.yml
 
 scenario:
   name: default
 
 verifier:
   name: testinfra
-  lint:
-    name: flake8
