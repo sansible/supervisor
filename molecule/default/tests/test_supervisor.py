@@ -9,10 +9,10 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 def test_config(host):
     super_config = host.file('/etc/supervisor/conf.d/supervisord.conf')
     assert super_config.exists
-    assert super_config.contains('^\s*loglevel\s*=\s*debug\s*$')
-    assert super_config.contains('^\s*minfds\s*=\s*2048\s*$')
+    assert super_config.contains(r'^\s*loglevel\s*=\s*debug\s*$')
+    assert super_config.contains(r'^\s*minfds\s*=\s*2048\s*$')
 
 
 def test_version(host):
     super_version = host.check_output('/usr/bin/supervisord -v')
-    assert super_version == '3.3.4'
+    assert super_version == '4.2.1'
